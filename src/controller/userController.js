@@ -115,15 +115,15 @@ const loginUser = async function (req, res) {
         //Extract Params
         let { email, password } = requestBody
 
-        if (!valid.validRequestBody(requestBody)) {
+        if (!validator.validRequestBody(requestBody)) {
             return res.status(400).send({ status: false, message: "Invalid request body. Please provide the the input to proceed" })
         }
         //Validation start
-        if (!valid.isValid(email)) {
+        if (!validator.isValid(email)) {
             return res.status(400).send({ status: false, message: "Please enter an email address." })
         }
 
-        if (!valid.isValid(password)) {
+        if (!validator.isValid(password)) {
             return res.status(400).send({ status: false, message: "Please enter Password." })
         }
 
