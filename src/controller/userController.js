@@ -107,14 +107,16 @@ const loginUser = async function (req, res) {
         if (!email) {return res.status(400).send({ status: false, msg: "Enter your  email" })}
         if (!password) {return res.status(400).send({ status: false, msg: "Enter your  password" })}
 
-    
+        if (!valid.isValidRequestBody(requestBody)) {
+            return res.status(400).send({ status: false, message: "Invalid request body. Please provide the the input to proceed" })
+        }
         //Validation start
         if (!valid.isValid(email)) {
-            return res.status(400).send({ status: false, message: "Please enter an valid email" })
+            return res.status(400).send({ status: false, message: "Please enter an email address." })
         }
 
         if (!valid.isValid(password)) {
-            return res.status(400).send({ status: false, message: "Please enter valid Password." })
+            return res.status(400).send({ status: false, message: "Please enter Password." })
         }
 
         let user = await UserModel.findOne({ email });
@@ -122,9 +124,11 @@ const loginUser = async function (req, res) {
             return res.status(400).send({ status: false, message: "Login failed! Email  is incorrect." });
 
         let passwordBody = user.password;
+        console.log(passwordBody);
         let encryptPassword = await bcrypt.compare(password, passwordBody);
-        console.log(typeof passwordBody)
-        if (!encryptPassword) return res.status(401).send({ status: false, message: "Login failed! password is incorrect." });
+        console.log(encryptPassword);
+
+        if (!encryptPassword) return res.status(400).send({ status: false, message: "Login failed! password is incorrect." });
         //Validation End
 
         let userId = user._id
@@ -143,6 +147,8 @@ const loginUser = async function (req, res) {
         res.status(500).send({ message: "Server not responding", error: err.message });
     }
 };
+
+
 //================================getuserprofile=================================================//
 const getuserprofile = async function (req, res) {
     try {
