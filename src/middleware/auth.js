@@ -1,38 +1,3 @@
-// const jwt = require("jsonwebtoken")
-// const secretKey='functionUp';
-// const Authentication = function(req, res, next) {
-//     try {
-//         const token = req.headers.authorization; 
-//     //    console.log(token);           
-//         if (!token) {
-//             return res.status(403).send({ status: false, message: `Missing authentication token in request` })
-//         }
-
-//         let Bearer = token.split(' ')
-        
-//         jwt.verify(Bearer[1], secretKey,function (err, data){
-//             if(err){ 
-//                 return res.status(400).send({status:false, message:err.message})
-//             }
-//             else{
-//                 req.userId = data.userId; 
-//                 next()
-//             }
-           
-//         }
-//         );
-//         //decoding authentication token
-          
-//             } catch (error) {
-          
-//               res.status(500).send({ status: 'error', error: error.message })
-//             }
-          
-//           }
-
-//           module.exports = { Authentication};
-
-
 const userModel = require("../models/userModel");
 const validator = require("../utils/validation");
 const jwt = require("jsonwebtoken");
