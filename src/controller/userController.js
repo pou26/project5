@@ -231,11 +231,12 @@ let updateUser = async (req, res) => {
             if(address["shipping"]){
                 if(address["shipping"]["street"]){
              if (!valid.isValid(address["shipping"]["street"])) { return res.status(400).send({ status: false, msg: "provide street" })};
-         }}}
+         }if(address["shipping"]["city"]){
+            if (!valid.isValid(address["shipping"]["city"])) { return res.status(400).send({ status: false, msg: "provide city" })}}
+        }
          if (address) {
             if(address["shipping"]){
-                if(address["shipping"]["city"]){
-             if (!valid.isValid(address["shipping"]["city"])) { return res.status(400).send({ status: false, msg: "provide city" })};
+                ;
          }}}
          if (address) {
             if(address["shipping"]){
