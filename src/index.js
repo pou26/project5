@@ -9,7 +9,7 @@ app.use(bodyParser.json());
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
-mongoose.connect("mongodb+srv://functionup-cohort:9QsFpQHzVpmlSepb@cluster0.fmzaohu.mongodb.net/group8Database?retryWrites=true&w=majority",{
+mongoose.connect("mongodb+srv://Deepanshuyadav:DEEPyadav1446@cluster0.f9r26yw.mongodb.net/group61Database",{
       useNewUrlParser: true, 
     })
 
