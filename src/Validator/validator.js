@@ -1,11 +1,15 @@
 const mongoose = require("mongoose");
 
 const isValidName = function (value) {
-  if (/[a-zA-Z0-9 ]*$/.test(value)) 
-
-    {return true;}
-   return false;
-};
+    if (
+      typeof value === "string" &&
+      value.trim().length > 0 &&
+      /^[A-Z]+[a-zA-Z0-9 ]*$/.test(value)
+    )
+      return true;
+    return false;
+  };
+  
 
 const isValid = function (value) {
   if (typeof value === "string" && value.trim().length > 0) return true;
@@ -23,12 +27,12 @@ const isValidpin = function (value) {
 };
 
 const isValidEmail = function (value) {
-  if (/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/.test(value)) return true;
+  if (/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/.test(value) && value.trim().length > 0) return true;
   return false;
 };
 
 const isValidPassword = function (value) {
-  if ( typeof value === "string" && value.trim().length > 0 && /^[a-zA-Z0-9]{8,15}$/.test(value)) return true;
+  if ( typeof value === "string" && value.trim().length > 0 && /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,15}$/.test(value)) return true;
   return false;
 };
 
