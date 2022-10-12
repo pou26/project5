@@ -43,6 +43,9 @@ const isValidRequestBody = function (requestBody) {
 const isValidObjectId = function (objectId) {
   return mongoose.Types.ObjectId.isValid(objectId);  
 }
+const isValidPrice =(price)=>{
+  return /^[0-9]+$/.test(price)
+}
 
 module.exports = { isValid, isValidRequestBody, isValidObjectId, isValidEmail, isValidPassword,
-    isValidName, isValidMobile, isValidpin };
+    isValidName, isValidMobile, isValidpin,isValidPrice };
