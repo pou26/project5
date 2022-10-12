@@ -1,5 +1,5 @@
 const userModel = require("../models/userModel");
-const validator = require("../utils/validation");
+const valid = require("../Validator/validator");
 const jwt = require("jsonwebtoken");
 
 // ---------------------------------------Authentication------------------------------------------------------------------
@@ -33,7 +33,7 @@ const authorization = async (req, res, next) => {
         let userId = req.params.userId;
         let userIdfromToken = req.decodedToken.userId;
 
-        if (!validator.vaildObjectId(userId))
+        if (!valid.isValidObjectId(userId))
             return res.status(400).send({ status: false, message: "Please enter vaild User id in params." });
 
         // if(!userId) return res.status(400).send({ status: false, message: "User-id is required" })
@@ -46,8 +46,8 @@ const authorization = async (req, res, next) => {
         if (findUser._id.toString() !== userIdfromToken) {
             res.status(401).send({ status: false, message: "Unauthorized access!!" });
         }
-
-        next();
+       else{
+        next()}
     } catch (err) {
         res.status(500).send({ status: false, error: err.message });
     }
