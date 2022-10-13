@@ -47,5 +47,9 @@ const isValidPrice =(price)=>{
   return /^[0-9]+$/.test(price)
 }
 
+const isValidAvailableSizes = function(size) {
+  return ["S", "XS", "M", "X", "L", "XXL", "XL"].includes(size) == true
+}
+
 module.exports = { isValid, isValidRequestBody, isValidObjectId, isValidEmail, isValidPassword,
-    isValidName, isValidMobile, isValidpin,isValidPrice };
+    isValidName, isValidMobile, isValidpin,isValidPrice,isValidAvailableSizes };

@@ -7,8 +7,12 @@ const middleWare = require("../middleware/auth")
 router.post("/register",userController.createUser)
 router.post("/login",userController.loginUser)
 router.get("/user/:userId/profile",middleWare.authentication,userController.getuserprofile)
-// router.put("/user/:userId/profile", userController.updateUser)
 router.put("/user/:userId/profile",middleWare.authentication,middleWare.authorization,userController.updateUser)
+
+
+//product
+router.post('/products', productController.createProduct);  
+router.get('/products', productController.getProductsByQuery);  
  
 
 
