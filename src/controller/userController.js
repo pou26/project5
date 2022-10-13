@@ -35,13 +35,19 @@ const createUser = async (req, res) => {
         if (!password) {return res.status(400).send({ status: false, msg: "Enter your  password" }); }
         if (!address) {return res.status(400).send({ status: false, msg: "Enter your  Address" }); }
         if (!address['shipping']) {return res.status(400).send({ status: false, msg: "Enter your shipping Address" }); }
+
         if (!address['shipping']['street']) {return res.status(400).send({ status: false, msg: "Enter your shipping street" }); }
+
         if (!address.shipping.city) {return res.status(400).send({ status: false, msg: "Enter your shipping city" }); }
+
         if (!address.shipping.pincode) {return res.status(400).send({ status: false, msg: "Enter your shipping pincode" }); }
+
         if (!address.billing) {return res.status(400).send({ status: false, msg: "Enter your billing pincode" }); }
-        if (!address.billing.street) {return res.status(400).send({ status: false, msg: "Enter your billing pincode" }); }
-        if (!address.billing.city) {return res.status(400).send({ status: false, msg: "Enter your billing pincode" }); }
-        if (!address.billing.pincode) {return res.status(400).send({ status: false, msg: "Enter your billing pincode" }); }
+
+        if (!address.billing.street) {return res.status(400).send({ status: false, msg: "Enter your billing street" }); }
+
+        if (!address.billing.city) {return res.status(400).send({ status: false, msg: "Enter your billing city" }); }
+
       
          if (!valid.isValidName(fname.trim())) {
             return res.status(400).send({ status: false, msg: "Please enter a valid FName" })
@@ -110,6 +116,7 @@ const loginUser = async function (req, res) {
         if (!valid.isValidRequestBody(requestBody)) {
             return res.status(400).send({ status: false, message: "Invalid request body. Please provide the the input to proceed" })
         }
+    
         //Validation start
         if (!valid.isValid(email)) {
             return res.status(400).send({ status: false, message: "Please enter an email address." })
@@ -240,17 +247,19 @@ let updateUser = async (req, res) => {
             const salt = await bcrypt.genSalt(10)
            updateData.password = await bcrypt.hash(password, salt)
         }
+
+
         if (address) {
           if(address.shipping)
             {
             if(address["shipping"]["street"]){
-            if (!valid.isValid(address["shipping"]["street"])) { return res.status(400).send({ status: false, msg: "provid street address" });
+            if (!valid.isValidT(address["shipping"]["street"])) { return res.status(400).send({ status: false, msg: "provid street address" });
         }
           updateData["address.shipping.street"]=address.shipping.street
 
     }
         if(address["shipping"]["city"])
-        {if (!valid.isValid(address["shipping"]["city"])) { return res .status(400) .send({ status: false, msg: "provid city address" });
+        {if (!valid.isValidT(address["shipping"]["city"])) { return res .status(400) .send({ status: false, msg: "provid city address" });
         }
         updateData["address.shipping.city"]=address.shipping.city
 
@@ -264,13 +273,13 @@ let updateUser = async (req, res) => {
       
         if(address.billing)
         {  if(address["billing"]["street"])
-        {if (!valid.isValid(address.billing.street)) { return res.status(400).send({ status: false, msg: "provid street address" });
+        {if (!valid.isValidT(address.billing.street)) { return res.status(400).send({ status: false, msg: "provid street address" });
         }
         updateData["address.billing.street"]=address.billing.street
 
     }
         if(address["billing"]["city"])
-       { if (!valid.isValid(address.billing.city)) { return res .status(400) .send({ status: false, msg: "provid city address" });
+       { if (!valid.isValidT(address.billing.city)) { return res .status(400) .send({ status: false, msg: "provid city address" });
         }
         updateData["address.billing.city"]=address.billing.city
 

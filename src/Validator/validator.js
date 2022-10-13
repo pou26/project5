@@ -58,6 +58,9 @@ const isValidI = function (value) {
     if (/[0-9]$/.test(value)) return true;
     return false;
   };
+  const isValidAvailableSizes = function(size) {
+    return ["S", "XS", "M", "X", "L", "XXL", "XL"].includes(size) == true
+  }
   
 
-module.exports = { isValid,isValidT,isValidI, isValidRequestBody, isValidObjectId, isValidEmail, isValidPassword,isValidName, isValidMobile, isValidpin,isValidPrice };
+module.exports = { isValid,isValidT,isValidI, isValidRequestBody, isValidObjectId, isValidEmail, isValidPassword,isValidName, isValidMobile, isValidpin,isValidPrice,isValidAvailableSizes };

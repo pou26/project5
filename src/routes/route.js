@@ -13,6 +13,7 @@ router.put("/user/:userId/profile",middleWare.authentication,middleWare.authoriz
 //==========================productapi=============================================// 
 // router.get("/getproduct",productController.getproduct)
 router.post("/products",productController.createProduct )
+router.get('/products', productController.getProductsByQuery)
 
 
 
