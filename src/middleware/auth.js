@@ -15,7 +15,7 @@ const authentication = function (req, res, next) {
 
         jwt.verify(token, "project-5-Products_Management_61", function (err, data) {
             if (err) {
-                return res.status(400).send({ status: false, message: "Token is invalid" })
+                return res.status(401).send({ status: false, message: "Unauthenticate User or Token is invalid" })
             }
            else {
                 req.decodedToken = data;
@@ -36,15 +36,15 @@ const authorization = async (req, res, next) => {
         if (!valid.isValidObjectId(userId))
             return res.status(400).send({ status: false, message: "Please enter vaild User id in params." });
 
-        // if(!userId) return res.status(400).send({ status: false, message: "User-id is required" })
+    
 
         let findUser = await userModel.findOne({ _id: userId })
         if (!findUser) {
-            return res.status(400).send({ status: false, message: "User not found." });
+            return res.status(404).send({ status: false, message: "User not found." });
         }
 
         if (findUser._id.toString() !== userIdfromToken) {
-            res.status(401).send({ status: false, message: "Unauthorized access!!" });
+            res.status(403).send({ status: false, message: "Unauthorized access!!" });
         }
        else{
         next()}

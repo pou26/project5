@@ -16,7 +16,7 @@ const createUser = async (req, res) => {
         let { fname,lname,email,profileImage, phone,password,address} = req.body
 
         let files= req.files
-    if(files && files.length>0){
+          if(files && files.length>0){
     
         let uploadedFileURL= await uploadFile(files[0])
 
@@ -30,18 +30,24 @@ const createUser = async (req, res) => {
         if (!fname) {return res.status(400).send({ status: false, msg: "Enter your  fname" }); }
         if (!lname) {return res.status(400).send({ status: false, msg: "Enter your  lname" }); }
         if (!email) {return res.status(400).send({ status: false, msg: "Enter your  email" }); }
-        if (!profileImage) {return res.status(400).send({ status: false, msg: "Enter your  profilrImage" }); }
+        if (!profileImage) {return res.status(400).send({ status: false, msg: "Enter your  profileImage" }); }
         if (!phone) {return res.status(400).send({ status: false, msg: "Enter your  phone" }); }
         if (!password) {return res.status(400).send({ status: false, msg: "Enter your  password" }); }
         if (!address) {return res.status(400).send({ status: false, msg: "Enter your  Address" }); }
         if (!address['shipping']) {return res.status(400).send({ status: false, msg: "Enter your shipping Address" }); }
+
         if (!address['shipping']['street']) {return res.status(400).send({ status: false, msg: "Enter your shipping street" }); }
+
         if (!address.shipping.city) {return res.status(400).send({ status: false, msg: "Enter your shipping city" }); }
+
         if (!address.shipping.pincode) {return res.status(400).send({ status: false, msg: "Enter your shipping pincode" }); }
+
         if (!address.billing) {return res.status(400).send({ status: false, msg: "Enter your billing pincode" }); }
-        if (!address.billing.street) {return res.status(400).send({ status: false, msg: "Enter your billing pincode" }); }
-        if (!address.billing.city) {return res.status(400).send({ status: false, msg: "Enter your billing pincode" }); }
-        if (!address.billing.pincode) {return res.status(400).send({ status: false, msg: "Enter your billing pincode" }); }
+
+        if (!address.billing.street) {return res.status(400).send({ status: false, msg: "Enter your billing street" }); }
+
+        if (!address.billing.city) {return res.status(400).send({ status: false, msg: "Enter your billing city" }); }
+
       
          if (!valid.isValidName(fname.trim())) {
             return res.status(400).send({ status: false, msg: "Please enter a valid FName" })
@@ -110,6 +116,7 @@ const loginUser = async function (req, res) {
         if (!valid.isValidRequestBody(requestBody)) {
             return res.status(400).send({ status: false, message: "Invalid request body. Please provide the the input to proceed" })
         }
+    
         //Validation start
         if (!valid.isValid(email)) {
             return res.status(400).send({ status: false, message: "Please enter an email address." })
@@ -124,9 +131,7 @@ const loginUser = async function (req, res) {
             return res.status(400).send({ status: false, message: "Login failed! Email  is incorrect." });
 
         let passwordBody = user.password;
-        console.log(passwordBody);
         let encryptPassword = await bcrypt.compare(password, passwordBody);
-        console.log(encryptPassword);
 
         if (!encryptPassword) return res.status(400).send({ status: false, message: "Login failed! password is incorrect." });
         //Validation End
@@ -182,38 +187,45 @@ const getuserprofile = async function (req, res) {
 
 let updateUser = async (req, res) => {
     try {
-        let { lname, fname, password, address, phone, email, profileImage } = req.body
+        let { lname, fname, password, address, phone, email} = req.body
         let UserId = req.params.userId
         let files = req.files
-        if (files && files.length > 0) {
-
-            let uploadedFileURL = await uploadFile(files[0])
-           req.body.profileImage = uploadedFileURL
-        }
-
         if (!valid.isValidRequestBody(req.body)) {
             return res.status(400).send({ status: false, message: "Provide details to Update" })
         }
+        let updateData={}
+
+        if (files && files.length > 0) {
+
+            let uploadedFileURL = await uploadFile(files[0])
+            updateData.profileImage = uploadedFileURL
+        }
+        
         if (fname) {
 
             if (!valid.isValidName(fname)) {
                 return res.status(400).send({ status: false, message: "Provide valid First name" })
             }
+            updateData.fname=fname
         }
 
         if (lname) {
             if (!valid.isValidName(lname)) {
                 return res.status(400).send({ status: false, message: "Provide valid last name" })
             }
+            updateData.lname=lname
+
         }
         if (email) {
             if (!valid.isValidEmail(email)) {
                 return res.status(400).send({ status: false, message: "Provide valid email" })
             }
-            let checkemail = await UserModel.findOne({ email: email })
+            let checkemail = await userModel.findOne({ email: email })
             if (checkemail) {
                 return res.status(400).send({ status: false, message: "Email already present" })
             }
+            updateData.email=email
+
         }
 
         if (phone) {
@@ -224,6 +236,8 @@ let updateUser = async (req, res) => {
             if (checkphone) {
                 return res.status(400).send({ status: false, message: "phone already present" })
             }
+            updateData.phone=phone
+
         }
 
         if (password) {
@@ -231,40 +245,53 @@ let updateUser = async (req, res) => {
                 return res.status(400).send({ status: false, message: "Provide valid password" })
             }
             const salt = await bcrypt.genSalt(10)
-            req.body.password = await bcrypt.hash(password, salt)
+           updateData.password = await bcrypt.hash(password, salt)
         }
+
+
         if (address) {
-            if(address["shipping"]){
-                if(address["shipping"]["street"]){
-             if (!valid.isValid(address["shipping"]["street"])) { return res.status(400).send({ status: false, msg: "provide street" })};
-         }}}
-         if (address) {
-            if(address["shipping"]){
-                if(address["shipping"]["city"]){
-             if (!valid.isValid(address["shipping"]["city"])) { return res.status(400).send({ status: false, msg: "provide city" })};
-         }}}
-         if (address) {
-            if(address["shipping"]){
-                if(address["shipping"]["pincode"]){
-             if (!valid.isValid(address["shipping"]["pincode"])) { return res.status(400).send({ status: false, msg: "provide pincode" })};
-         }}}
-         if (address) {
-            if(address["billing"]){
-                if(address["billing"]["street"]){
-             if (!valid.isValid(address["billing"]["street"])) { return res.status(400).send({ status: false, msg: "provide street " })};
-         }}}
-         if (address) {
-            if(address["billing"]){
-                if(address["billing"]["city"]){
-             if (!valid.isValid(address["billing"]["city"])) { return res.status(400).send({ status: false, msg: "provide city " })};
-         }}}
-         if (address) {
-            if(address["billing"]){
-                if(address["billing"]["pincode"]){
-             if (!valid.isValid(address["billing"]["pincode"])) { return res.status(400).send({ status: false, msg: "provide pincode " })};
-         }}}
-         
-        let updatedData = await UserModel.findOneAndUpdate({_id:UserId},req.body,{new:true})
+          if(address.shipping)
+            {
+            if(address["shipping"]["street"]){
+            if (!valid.isValidT(address["shipping"]["street"])) { return res.status(400).send({ status: false, msg: "provid street address" });
+        }
+          updateData["address.shipping.street"]=address.shipping.street
+
+    }
+        if(address["shipping"]["city"])
+        {if (!valid.isValidT(address["shipping"]["city"])) { return res .status(400) .send({ status: false, msg: "provid city address" });
+        }
+        updateData["address.shipping.city"]=address.shipping.city
+
+    }
+        if(address["shipping"]["pincode"])
+       { if (!valid.isValidpin(address.shipping.pincode)) {return res.status(400).send({ status: false, msg: " pincode must have 6 digits only" });
+        }
+        updateData["address.shipping.pincode"]=address.shipping.pincode
+
+    }}
+      
+        if(address.billing)
+        {  if(address["billing"]["street"])
+        {if (!valid.isValidT(address.billing.street)) { return res.status(400).send({ status: false, msg: "provid street address" });
+        }
+        updateData["address.billing.street"]=address.billing.street
+
+    }
+        if(address["billing"]["city"])
+       { if (!valid.isValidT(address.billing.city)) { return res .status(400) .send({ status: false, msg: "provid city address" });
+        }
+        updateData["address.billing.city"]=address.billing.city
+
+    }
+        if(address["billing"]["pincode"])
+       { if (!valid.isValidpin(address.billing.pincode)) {return res.status(400).send({ status: false, msg: " pincode must have 6 digits only" });
+        }
+        updateData["address.billing.pincode"]=address.billing.pincode
+
+    }}
+        }
+        let updatedData = await UserModel.findOneAndUpdate({_id:UserId},updateData,{new:true})
         return res.status(200).send({ status: true, Data : updatedData})
 
     }
@@ -274,5 +301,15 @@ let updateUser = async (req, res) => {
 }
 
 
-
 module.exports={createUser,loginUser,getuserprofile,updateUser}
+// if (availableSizes) {
+//     let array = availableSizes.split(",").map(x => x.toUpperCase().trim())
+//     for (let i = 0; i < array.length; i++) {
+//         if (!(["S", "XS", "M", "X", "L", "XXL", "XL"].includes(array[i]))) {
+//             return res.status(400).send({ status: false, message: 'Sizes only available from ["S", "XS", "M", "X", "L", "XXL", "XL"]' })
+//         }
+//     }
+//     if (Array.isArray(array)) {
+//         requestBody.availableSizes = array
+//     }
+// }

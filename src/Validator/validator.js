@@ -4,12 +4,20 @@ const isValidName = function (value) {
     if (
       typeof value === "string" &&
       value.trim().length > 0 &&
-      /^[A-Z]+[a-zA-Z0-9 ]*$/.test(value)
+      /^[A-Z]+[a-zA-Z\D ]*$/.test(value)
     )
       return true;
     return false;
   };
-  
+  const isValidT = function (value) {
+    if (
+      typeof value === "string" &&
+      value.trim().length > 0 &&
+      /[a-zA-Z0-9 ]*$/.test(value)
+    )
+      return true;
+    return false;
+  };
 
 const isValid = function (value) {
   if (typeof value === "string" && value.trim().length > 0) return true;
@@ -44,12 +52,15 @@ const isValidObjectId = function (objectId) {
   return mongoose.Types.ObjectId.isValid(objectId);  
 }
 const isValidPrice =(price)=>{
-  return /^[0-9]+$/.test(price)
+  return /^[1-9]\d{0,7}(?:\.\d{1,2})?$/.test(price)
 }
-
-const isValidAvailableSizes = function(size) {
-  return ["S", "XS", "M", "X", "L", "XXL", "XL"].includes(size) == true
-}
+const isValidI = function (value) {
+    if (/[0-9]$/.test(value)) return true;
+    return false;
+  };
+  const isValidAvailableSizes = function(size) {
+    return ["S", "XS", "M", "X", "L", "XXL", "XL"].includes(size) == true
+  }
 
 module.exports = { isValid, isValidRequestBody, isValidObjectId, isValidEmail, isValidPassword,
     isValidName, isValidMobile, isValidpin,isValidPrice,isValidAvailableSizes };
