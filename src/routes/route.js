@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const userController = require("../controller/userController")
-const productController=require("../controller/productController")
+const productController= require("../controller/productController")
+const cartController = require("../controller/cartController")
 const middleWare = require("../middleware/auth")
 
 
@@ -13,11 +14,15 @@ router.put("/user/:userId/profile",middleWare.authentication,middleWare.authoriz
 // router.get("/getproduct",productController.getproduct)
 router.post("/products",productController.createProduct )
 router.get('/products', productController.getProductsByQuery)
-router.get('/products', productController.getProductsByQuery)
-router.put('/products', productController.getProductsByQuery)
-router.delete('/products', productController.getProductsByQuery)
+router.get('/products/:productId', productController.getproduct)
+router.put('/products/:productId', productController.updateProduct)
+router.delete('/products/:productId', productController.deleteproduct)
 
+//cart
 
+router.put("/users/:userId/cart", middleWare.authentication,middleWare.authorization, cartController.updateCart)
+router.get("/users/:userId/cart", middleWare.authentication,middleWare.authorization, cartController.getCart)
+router.delete("/users/:userId/cart", middleWare.authentication,middleWare.authorization, cartController.deleteCart)
 
 router.all("/*",(req,res)=>{
   res.status(400).send({status:false,message:"Endpoint is not correct"})})
