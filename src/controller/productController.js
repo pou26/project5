@@ -143,44 +143,7 @@ const getProductsByQuery = async function (req, res) {
         return res.status(500).send({ status: false, message: err.message });
     }
 };
-// //========================================= getproduct =========================================//
-// const getproduct = async function (req, res) {
-//     try {
-//         let data = req.params.productId
-//         let { size, price, name, priceSort } = data;
 
-//         if (size)
-//             size = size.toUpperCase()
-//         let givenSizes = ['S', 'XS', 'M', 'X', 'L', 'XXL', 'XL']
-//         if (!givenSizes) {
-//             return res.status(400).send({ status: false, message: `size should be one these only ${givenSizes}` })
-//         }
-//         if (price) {
-//             if (!(price))
-//                 return res.status(400).send({ status: false, message: "Product price is required" });
-//             if (!valid.isValidPrice(price))
-//                 return res.status(400).send({ status: false, message: "Product price should be valid" });
-//             if (name) {
-//                 if (!(name))
-//                     return res.status(400).send({ status: false, message: "Product name is required" });
-//                 if (!isValidName(name))
-//                     return res.status(400).send({ status: false, message: "Product name should be valid" });
-
-//                 if (priceSort) {
-//                     if (!((priceSort == 1) || (priceSort == -1))) {
-//                         return res.status(400).send({ status: false, message: 'In price sort it contains only 1 & -1' });
-//                     }
-//                 }
-
-//                 let products = await productModel.find({ isDeleted: false }).sort({ price: priceSort })
-//                 res.status(200).send({ status: true, msg: products })
-//             }
-//         }
-//     }
-//     catch (err) {
-//         res.status(500).send({ msg: err.message })
-//     }
-// }
 
 const getproduct = async function (req, res) {
     try {
@@ -230,8 +193,6 @@ const updateProduct = async function (req, res) {
         if(findProduct.isDeleted == true){
             return res.status(400).send({ status:false, message: "product is deleted" });
         }
-
-        if (!valid.isValidRequestBody(data)) { return res.status(400).send({ status: false, message: "Please provide data to update" }) }
         
         
     if(title){    
@@ -278,10 +239,12 @@ const updateProduct = async function (req, res) {
             }
 
         let files = req.files
+        if (!valid.isValidRequestBody(data) && files.length == 0) return res.status(400).send({ status: false, message: "plz enter the field which you want to update"});
         if (files && files.length > 0) {
             let uploadFileUrl = await aws.uploadFile(files[0])
             dataObject['productImage'] = uploadFileUrl
         }
+        
         if (availableSizes) {
             if (!valid.isValid(availableSizes)) {
                 return res.status(400).send({ status: false, message: 'AvailableSizes is required' })

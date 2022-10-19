@@ -6,13 +6,10 @@ const UserModel = require("../models/userModel")
 const createCart = async function (req,res) {
 try {
     let userId =req.params.userId
-    if (!valid.isValidObjectId(userId)) {
-        return res.status(400).send({ status: false, message: 'Params UserId is invalid' })
-    }
 
     let data = req.body
     if(!valid.isValidRequestBody(data)){
-        return res.status(400).send({status:false,msg:"Give valid userID",})
+        return res.status(400).send({status:false,msg:"Give valid Body",})
     }
     
     let {productId,quantity,cartId} = data
@@ -27,18 +24,13 @@ try {
     if(!product){
         return res.status(404).send({ status: false, message: "No product found"})
     }
-    const cartpresent = await cartModel.findById(cartId)
-    if(!cartpresent){return res.status(404).send({ status: false, message: "No Cart found"})
-
-    }
-
     if(!quantity){
         quantity=1
     }
     if(typeof quantity != Number && quantity <=0 ){
         return res.status(400).send({ status: false, message: "Enter valid Quantity" })
     }
-    const cart = await cartModel.findOne({userId:userId})
+    const cart = await cartModel.findOne(cartId)
     if(cart){
     let cartItem =cart.items
     let cartTotalPrice = cart.totalPrice
@@ -76,10 +68,8 @@ try {
     
 }
 }catch (error) {
-    return res.status(500).send({ status: false, message: error.message })
-    
+    return res.status(500).send({ status: false, message: error.message})
 }}
-
 
 const updateCart = async function(req,res) {
     try{
@@ -94,7 +84,7 @@ const updateCart = async function(req,res) {
             return res.status(400).send({ status: false, msg: "Invalid parameters"});
         }
 
-        const userSearch = await userModel.findById({_id:userId})
+        const userSearch = await UserModel.findById({_id:userId})
         if(!userSearch) {
             return res.status(400).send({status: false, msg: "userId does not exist"})
         }
@@ -180,7 +170,7 @@ const getCart = async function (req, res) {
                 return res.status(400).send({ status: false, msg: "wrong userId" });
         }
         // finding user in DB 
-        let checkUserId = await userModel.findOne({ _id: userId });
+        let checkUserId = await UserModel.findOne({ _id: userId });
         if (!checkUserId) {
             return res.status(404).send({ status: false, message: "no user details found" });
         }
@@ -192,7 +182,7 @@ const getCart = async function (req, res) {
         if (!getData) {
             return res.status(404).send({ status: false, message: "cart not found" });
         }
-        res.status(200).send({ status: true, message: "cart successfully", data: fetchData });
+        res.status(200).send({ status: true, message: "cart successfully", data: getData });
     } catch (err) {
         return res.status(500).send({ status: false, msg: err.message })
     }
@@ -201,19 +191,19 @@ const getCart = async function (req, res) {
 const deleteCart = async (req, res) => {
     try {
         let userId = req.params.userId
-        if (!isValidObjectId(userId)) { return res.status(400).send({ status: false, message: "Please provide a valid userId." }) };
+        if (!valid.isValidObjectId(userId)) { return res.status(400).send({ status: false, message: "Please provide a valid userId." }) };
        
-        const userExist = await userModel.findById(userId)
+        const userExist = await UserModel.findById(userId)
         if(!userExist)return res.status(404).send({status:false,msg:"user not found"})
     
-        const cartExist = await userModel.findById(userId)
+        const cartExist = await UserModel.findById(userId)
         if(!cartExist)return res.status(404).send({status:false,msg:"cart not found"})
     
         let cart = await cartModel.findByIdAndUpdate((userId),{items:[],totalItems:0,totalPrice:0},{new:true})
-        return res.status(204).send({ status: false, data:cart})
+        return res.status(204).send()
     } catch (error) {
         return res.status(500).send({status:false,err:error.message})
     }
 }
 
-module.exports = {createCart,getCart,updateCart,deleteCart}
+module.exports = {createCart,updateCart,getCart,deleteCart}

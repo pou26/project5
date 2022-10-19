@@ -62,5 +62,15 @@ const isValidI = function (value) {
     return ["S", "XS", "M", "X", "L", "XXL", "XL"].includes(size) == true
   }
 
+const addressStreetRegex = function (value) {
+  if (/^[a-zA-Z0-9 -\.]+$/.test(value)) return true;
+  return false;
+};
+
+const addressCityRegex = function (value) {
+  if (/^[a-zA-Z ]+$/.test(value)) return true;
+  return false;
+};
+
 module.exports = { isValid,isValidT, isValidRequestBody, isValidObjectId, isValidEmail, isValidPassword,
-    isValidName, isValidMobile, isValidpin,isValidPrice,isValidAvailableSizes,isValidI };
+    isValidName, isValidMobile, isValidpin,isValidPrice,isValidAvailableSizes,isValidI,addressCityRegex,addressStreetRegex };

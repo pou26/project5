@@ -2,7 +2,7 @@ const userModel = require("../models/userModel");
 const valid = require("../Validator/validator");
 const jwt = require("jsonwebtoken");
 
-// ---------------------------------------Authentication------------------------------------------------------------------
+// ------------------------------------ Authentication -----------------------------------------------------//
 const authentication = function (req, res, next) {
     try {
         let bearerHeader = req.headers.authorization;
