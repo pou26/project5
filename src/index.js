@@ -1,5 +1,4 @@
 const express = require("express");
-const bodyParser = require("body-parser");
 const route = require("./routes/route.js");
 const mongoose = require("mongoose");
 const multer = require("multer")
@@ -17,11 +16,6 @@ mongoose.connect("mongodb+srv://Deepanshuyadav:DEEPyadav1446@cluster0.f9r26yw.mo
 
 
 app.use("/", route);
-
-
-
-
-
 
 
 app.listen(process.env.PORT || 3000, function () {
