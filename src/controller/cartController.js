@@ -192,7 +192,7 @@ const deleteCart = async function (req, res) {
     try {
         const userId = req.params.userId;
 
-        //validating userId
+       
         if (!valid.isValidObjectId(userId)) {
             return res.status(400).send({ status: false, message: "Invalid userId in params." })
         }
@@ -201,12 +201,12 @@ const deleteCart = async function (req, res) {
             return res.status(400).send({status: false,message: `User doesn't exists by ${userId} `})
         }
 
-        //finding cart
+        
         const findCart = await cartModel.findOne({ userId: userId })
         if (!findCart) {
             return res.status(400).send({status: false,message: `Cart doesn't exists by ${userId} `})
         }
-        //Basically not deleting the cart, just changing their value to 0.
+        //not deleting the cart, just changing their value to 0.
         const deleteCart = await cartModel.findOneAndUpdate({ userId: userId }, {$set: {items: [],totalPrice: 0,totalItems: 0}},{new:true})
         return res.status(204).send()
     } catch (err) {
