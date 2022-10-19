@@ -135,7 +135,7 @@ const deleteCart = async (req, res) => {
         if(!cartExist)return res.status(404).send({status:false,msg:"cart not found"})
     
         let cart = await cartModel.findByIdAndUpdate((userId),{items:[],totalItems:0,totalPrice:0},{new:true})
-        return res.status(204).send({ status: false, msg: "CART DELETED SUCESSFULLY", data:cart})
+        return res.status(204).send({ status: false, data:cart})
     } catch (error) {
         return res.status(500).send({status:false,err:error.message})
     }
