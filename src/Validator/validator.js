@@ -61,6 +61,6 @@ const isValidI = function (value) {
   const isValidAvailableSizes = function(size) {
     return ["S", "XS", "M", "X", "L", "XXL", "XL"].includes(size) == true
   }
-  
 
-module.exports = { isValid,isValidT,isValidI, isValidRequestBody, isValidObjectId, isValidEmail, isValidPassword,isValidName, isValidMobile, isValidpin,isValidPrice,isValidAvailableSizes };
+module.exports = { isValid,isValidT, isValidRequestBody, isValidObjectId, isValidEmail, isValidPassword,
+    isValidName, isValidMobile, isValidpin,isValidPrice,isValidAvailableSizes,isValidI };
