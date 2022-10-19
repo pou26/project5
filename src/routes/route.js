@@ -8,7 +8,7 @@ const middleWare = require("../middleware/auth")
 
 router.post("/register",userController.createUser)
 router.post("/login",userController.loginUser)
-router.get("/user/:userId/profile",middleWare.authentication,userController.getuserprofile)
+router.get("/user/:userId/profile",middleWare.authentication,middleWare.authorization,userController.getuserprofile)
 router.put("/user/:userId/profile",middleWare.authentication,middleWare.authorization,userController.updateUser)
 //==========================productapi=============================================// 
 // router.get("/getproduct",productController.getproduct)
