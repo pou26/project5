@@ -11,6 +11,9 @@ const createProduct = async function (req, res) {
         let { title, description, price, currencyId, currencyFormat, availableSizes, installments } = data
 
         if (file && file.length > 0) {
+            let validImage=file[0].mimetype.split('/')
+            if(validImage[0]!="image"){
+           return res.status(400).send({ status: false, message: "Please Provide Valid Image.." })}
             let image = await aws.uploadFile(file[0])
             data.productImage = image
         } else {

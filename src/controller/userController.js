@@ -21,6 +21,9 @@ const createUser = async (req,res) =>{
         // checking files are coming or not
         let files= req.files
         if(files && files.length>0){
+            let validImage=files[0].mimetype.split('/')
+            if(validImage[0]!="image"){
+           return res.status(400).send({ status: false, message: "Please Provide Valid Image.." })}
   
       let uploadedFileURL= await uploadFile(files[0])
 
@@ -229,12 +232,14 @@ let updateUser = async (req, res) => {
         let { lname, fname, password, address, phone, email} = req.body
         let UserId = req.params.userId
         let files = req.files
-        if (!valid.isValidRequestBody(req.body)) {
-            return res.status(400).send({ status: false, message: "Provide details to Update" })
-        }
+        if (!valid.isValidRequestBody(req.body) && !(req.files)) return res.status(400).send({ status: false, message: "plz enter the field which you want to update"});
+
         let updateData={}
 
         if (files && files.length > 0) {
+            let validImage=files[0].mimetype.split('/')
+            if(validImage[0]!="image"){
+           return res.status(400).send({ status: false, message: "Please Provide Valid Image.." })}
 
             let uploadedFileURL = await uploadFile(files[0])
             updateData.profileImage = uploadedFileURL
