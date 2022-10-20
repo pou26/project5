@@ -6,11 +6,15 @@ const createProduct = async function (req, res) {
     try {
         let data = req.body
         let file = req.files
+        
 
         if (Object.keys(data).length == 0) { return res.status(400).send({ status: false, message: "please input some data" }) }
         let { title, description, price, currencyId, currencyFormat, availableSizes, installments } = data
 
         if (file && file.length > 0) {
+            let validImage=file[0].mimetype.split('/')
+            if(validImage[0]!="image"){
+           return res.status(400).send({ status: false, message: "Please Provide Valid Image.." })}
             let image = await aws.uploadFile(file[0])
             data.productImage = image
         } else {
@@ -102,7 +106,6 @@ const getProductsByQuery = async function (req, res) {
                     return res.status(400).send({ status: false, msg: `Size should be among ${["S", "XS", "M", "X", "L", "XXL", "XL"]}` })
                 }
             }
-
             filterQuery['availableSizes'] = { $in: size }
         };
 
@@ -117,10 +120,10 @@ const getProductsByQuery = async function (req, res) {
                 return res.status(400).send({ status: false, msg: "provide priceLessThan in numeric" })
             filterQuery['price'] = { $lt: priceLessThan }
         };
-
+        if(name){
         if (valid.isValid(name)) {
-            filterQuery['title'] = { $regex: name, $options: "i" };
-        };
+            filterQuery['title'] = { $regex: name, $options: "i" }
+        }};
 
         // validation of priceSort
         if (priceSort) {
@@ -175,10 +178,14 @@ const updateProduct = async function (req, res) {
     try {
         let data = req.body;
         const productId = req.params.productId
+        let files = req.files
 
         let { title, description, price, currencyId, currencyFormat, installments,availableSizes, isFreeShipping } = data
 
         const dataObject = {};
+
+
+        if (!valid.isValidRequestBody(data) && !(req.files)) return res.status(400).send({ status: false, message: "plz enter the field which you want to update"});
 
         if (!(valid.isValidObjectId(productId))) {
             return res.status(400).send({ status: false, message: "productId is invalid" });
@@ -227,20 +234,19 @@ const updateProduct = async function (req, res) {
     }  
 
     if (currencyId) {
-        if (!(valid.isValid(currencyId))) return res.status(400).send({ status: false, message: "currencyId required" });
         if (currencyId != 'INR') return res.status(400).send({ status: false, message: "only indian currencyId INR accepted"});
         dataObject['currencyId'] = currencyId
             }    
 
     if (currencyFormat) {
-        if (!(valid.isValid(currencyFormat))) return res.status(400).send({ status: false, message: "currency format required" });
         if (currencyFormat != '₹') return res.status(400).send({ status: false, message: "only indian currency ₹ accepted"});
         dataObject['currencyFormat'] = currencyFormat
             }
-
-        let files = req.files
-        if (!valid.isValidRequestBody(data) && files.length == 0) return res.status(400).send({ status: false, message: "plz enter the field which you want to update"});
+        
         if (files && files.length > 0) {
+            let validImage=files[0].mimetype.split('/')
+            if(validImage[0]!="image"){
+           return res.status(400).send({ status: false, message: "Please Provide Valid Image.." })}
             let uploadFileUrl = await aws.uploadFile(files[0])
             dataObject['productImage'] = uploadFileUrl
         }
@@ -256,11 +262,8 @@ const updateProduct = async function (req, res) {
                     return res.status(400).send({ status: false, message: 'Sizes only available from ["S", "XS", "M", "X", "L", "XXL", "XL"]' })
                 }
             
-            if (Array.isArray(array)) {
-                data.availableSizes = array
-            }
         }
-            dataObject["availableSizes"]= availableSizes 
+            dataObject["availableSizes"]= array
     }   
         
         if (installments) {
@@ -307,7 +310,7 @@ const deleteproduct = async function (req, res) {
             return res.status(404).send({ status: false, msg: "you have already deleted the product" });
 
         await productModel.findByIdAndUpdate(savedData, { $set: { isDeleted: true, deletedAt: Date.now() } });
-        res.status(200).send({ msg: "product is sucessfully deleted" });
+        res.status(200).send({status: true, msg: "product is sucessfully deleted" });
     } catch (error) {
         res.status(500).send({ status: false, msg: error.message });
     }

@@ -9,7 +9,7 @@ const isValidName = function (value) {
       return true;
     return false;
   };
-  const isValidT = function (value) {
+  const isValidT = function (value) {   //title
     if (
       typeof value === "string" &&
       value.trim().length > 0 &&

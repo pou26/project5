@@ -21,9 +21,13 @@ const createUser = async (req,res) =>{
         // checking files are coming or not
         let files= req.files
         if(files && files.length>0){
+            let validImage=files[0].mimetype.split('/')
+           
+            if(validImage[0] !="image"){
+           return res.status(400).send({ status: false, message: "Please Provide Valid Image.." })}
   
       let uploadedFileURL= await uploadFile(files[0])
-
+    
   
       profileImage=uploadedFileURL
   }
@@ -69,12 +73,11 @@ const createUser = async (req,res) =>{
         //validate address
         
         if (!address) return res.status(400).send({ status: false, message: "Enter address" })
-                
         try {
             address = JSON.parse(address);
-        }
+        } 
         catch (err) {
-            console.log(err)
+    
            return  res.status(400).send({ status: false, message: "Address not in object format or its values are invalid format!!" })
         }
 
@@ -127,8 +130,6 @@ const createUser = async (req,res) =>{
             address: address
 
         }
-
-
         let result = await UserModel.create(data1)
           res.status(201).send({status:true, message:"User created successfully", data:result})
         }
@@ -201,8 +202,7 @@ const getuserprofile = async function (req, res) {
             return res.status(400).send({ status: false, msg: "Provide user Id" })
 
         }
-
-    //if userId is given then is it valid or not
+//if userId is given then is it valid or not
 
         if (userId) {
             if (!valid.isValidObjectId (userId))
@@ -229,12 +229,14 @@ let updateUser = async (req, res) => {
         let { lname, fname, password, address, phone, email} = req.body
         let UserId = req.params.userId
         let files = req.files
-        if (!valid.isValidRequestBody(req.body)) {
-            return res.status(400).send({ status: false, message: "Provide details to Update" })
-        }
+        if (!valid.isValidRequestBody(req.body) && !(req.files)) return res.status(400).send({ status: false, message: "plz enter the field which you want to update"});
+
         let updateData={}
 
         if (files && files.length > 0) {
+            let validImage=files[0].mimetype.split('/')
+            if(validImage[0]!="image"){
+           return res.status(400).send({ status: false, message: "Please Provide Valid Image.." })}
 
             let uploadedFileURL = await uploadFile(files[0])
             updateData.profileImage = uploadedFileURL
