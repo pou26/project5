@@ -243,7 +243,7 @@ const updateProduct = async function (req, res) {
             }
 
         let files = req.files
-        // if (!valid.isValidRequestBody(files) && files.length == 0) return res.status(400).send({ status: false, message: "plz enter the field which you want to update"});
+        
         if (files && files.length > 0) {
             let validImage=files[0].mimetype.split('/')
             if(validImage[0]!="image"){
@@ -251,7 +251,7 @@ const updateProduct = async function (req, res) {
             let uploadFileUrl = await aws.uploadFile(files[0])
             dataObject['productImage'] = uploadFileUrl
         }
-        if (!isValidRequestBody(body) && files.length == 0) return res.status(400).send({ status: false, message: "plz enter the field which you want to update"});
+ 
 
         
         if (availableSizes) {
