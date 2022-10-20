@@ -175,14 +175,14 @@ const updateProduct = async function (req, res) {
     try {
         let data = req.body;
         const productId = req.params.productId
+        let files = req.files
 
         let { title, description, price, currencyId, currencyFormat, installments,availableSizes, isFreeShipping } = data
 
         const dataObject = {};
 
-        if (!(valid.isValidRequestBody(data))) {
-            return res.status(400).send({ status: false, message: "please enter data to update" });
-        }
+
+        if (!valid.isValidRequestBody(data) && !(req.files)) return res.status(400).send({ status: false, message: "plz enter the field which you want to update"});
 
         if (!(valid.isValidObjectId(productId))) {
             return res.status(400).send({ status: false, message: "productId is invalid" });
@@ -241,8 +241,6 @@ const updateProduct = async function (req, res) {
         if (currencyFormat != '₹') return res.status(400).send({ status: false, message: "only indian currency ₹ accepted"});
         dataObject['currencyFormat'] = currencyFormat
             }
-
-        let files = req.files
         
         if (files && files.length > 0) {
             let validImage=files[0].mimetype.split('/')
@@ -251,6 +249,8 @@ const updateProduct = async function (req, res) {
             let uploadFileUrl = await aws.uploadFile(files[0])
             dataObject['productImage'] = uploadFileUrl
         }
+
+
  
 
         
