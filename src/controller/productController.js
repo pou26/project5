@@ -180,6 +180,10 @@ const updateProduct = async function (req, res) {
 
         const dataObject = {};
 
+        if (!(valid.isValidRequestBody(data))) {
+            return res.status(400).send({ status: false, message: "please enter data to update" });
+        }
+
         if (!(valid.isValidObjectId(productId))) {
             return res.status(400).send({ status: false, message: "productId is invalid" });
         }
@@ -239,11 +243,16 @@ const updateProduct = async function (req, res) {
             }
 
         let files = req.files
-        if (!valid.isValidRequestBody(data) && files.length == 0) return res.status(400).send({ status: false, message: "plz enter the field which you want to update"});
+        // if (!valid.isValidRequestBody(files) && files.length == 0) return res.status(400).send({ status: false, message: "plz enter the field which you want to update"});
         if (files && files.length > 0) {
+            let validImage=files[0].mimetype.split('/')
+            if(validImage[0]!="image"){
+           return res.status(400).send({ status: false, message: "Please Provide Valid Image.." })}
             let uploadFileUrl = await aws.uploadFile(files[0])
             dataObject['productImage'] = uploadFileUrl
         }
+        if (!isValidRequestBody(body) && files.length == 0) return res.status(400).send({ status: false, message: "plz enter the field which you want to update"});
+
         
         if (availableSizes) {
             if (!valid.isValid(availableSizes)) {
@@ -307,7 +316,7 @@ const deleteproduct = async function (req, res) {
             return res.status(404).send({ status: false, msg: "you have already deleted the product" });
 
         await productModel.findByIdAndUpdate(savedData, { $set: { isDeleted: true, deletedAt: Date.now() } });
-        res.status(200).send({ msg: "product is sucessfully deleted" });
+        res.status(200).send({status: true, msg: "product is sucessfully deleted" });
     } catch (error) {
         res.status(500).send({ status: false, msg: error.message });
     }

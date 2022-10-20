@@ -30,7 +30,7 @@ try {
     if(typeof quantity != Number && quantity <=0 ){
         return res.status(400).send({ status: false, message: "Enter valid Quantity" })
     }
-    const cart = await cartModel.findOne(cartId)
+    const cart = await cartModel.findById(cartId)
     if(cart){
     let cartItem =cart.items
     let cartTotalPrice = cart.totalPrice
@@ -40,7 +40,7 @@ try {
             cartItem[i].quantity = cartItem[i].quantity + quantity
             cart.totalPrice = ((product.price)*quantity) + cartTotalPrice
             cart.save()
-    return res.status(200).send({ status: true, message: "product added to cart successfully", data:cart })
+    return res.status(201).send({ status: true, message: "Success", data:cart })
 }}
     
             cart.items.push({
@@ -50,7 +50,7 @@ try {
         cart.totalItems= cartItem.length
          cart.totalPrice= ((product.price)*quantity) + cartTotalPrice
          await cart.save()
-    return res.status(200).send({ status: true, message: "product added to cart successfully", data:cart })
+    return res.status(201).send({ status: true, message: "Success", data:cart })
 }
      if(!cart){
         const itemAdded = {
@@ -64,7 +64,7 @@ try {
             // cart.save()
         }  
     const newCart = await cartModel.create(itemAdded)
-    return res.status(201).send({ status: true, message: "product added to cart successfully", data: newCart })
+    return res.status(201).send({ status: true, message: "Success", data: newCart })
     
 }
 }catch (error) {
