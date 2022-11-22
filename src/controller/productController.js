@@ -246,7 +246,7 @@ const updateProduct = async function (req, res) {
             }
         
         if (files && files.length > 0) {
-            let validImage=files[0].mimetype.split('/')
+            let validImage=files[0].mimetype.split('/') //mimetype for image file type
             if(validImage[0]!="image"){
            return res.status(400).send({ status: false, message: "Please Provide Valid Image.." })}
             let uploadFileUrl = await aws.uploadFile(files[0])

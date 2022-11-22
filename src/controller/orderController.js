@@ -60,6 +60,7 @@ if(!findUser){
   newQuantity = newQuantity + cartExist.items[i].quantity
 
   }
+  //destructure
   const newOrder = {
     userId:userId,
     items: cartExist.items,

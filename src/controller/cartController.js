@@ -89,9 +89,6 @@ const updateCart = async function(req,res) {
             return res.status(400).send({status: false, msg: "userId does not exist"})
         }
 
-        // if(userId !== req.userId) {
-        //     return res.status(401).send({status: false, msg: "Unauthorised access"})
-        // }
 
         const {cartId, productId, removeProduct} = body
 

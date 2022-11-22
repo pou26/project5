@@ -74,3 +74,5 @@ const addressCityRegex = function (value) {
 
 module.exports = { isValid,isValidT, isValidRequestBody, isValidObjectId, isValidEmail, isValidPassword,
     isValidName, isValidMobile, isValidpin,isValidPrice,isValidAvailableSizes,isValidI,addressCityRegex,addressStreetRegex };
+
+    

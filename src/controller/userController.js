@@ -66,9 +66,6 @@ const createUser = async (req,res) =>{
          let hash = await bcrypt.hash(password, rounds);
          data.password = hash;
 
-
-        // checking for address
-
         //validate address
         
         if (!address) return res.status(400).send({ status: false, message: "Enter address" })
